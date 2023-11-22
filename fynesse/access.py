@@ -231,8 +231,8 @@ def create_database_property_prices(conn: Connection) -> None:
         """
         SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
         SET time_zone = "+00:00";
-        CREATE DATABASE IF NOT EXISTS `property_prices` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
-        USE `property_prices`;
+        CREATE DATABASE IF NOT EXISTS property_prices DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+        USE property_prices;
     """
     )
 
