@@ -91,6 +91,7 @@ def data() -> pandas.DataFrame:
     # Index postcode_data by postcode
     index_postcode_data(conn)
 
+    # Join pp_data and postcode_data on postcode
     rows = join_pp_pc(conn)
     for i in range(5):
         print(rows[i])
