@@ -218,7 +218,7 @@ def create_connection(user, password, host, database, port=3306) -> Connection:
             host=host,
             port=port,
             local_infile=1,
-            db=database,
+            # db=database,
         )
     except Exception as e:
         print(f"Error connecting to the MariaDB Server: {e}")
@@ -229,8 +229,8 @@ def create_database_property_prices(conn: Connection) -> None:
     cur = conn.cursor()
     cur.execute(
         """
-        SET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';
-        SET time_zone = '+00:00';
+        SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+        SET time_zone = "+00:00";
         
         CREATE DATABASE IF NOT EXISTS `property_prices` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
         
