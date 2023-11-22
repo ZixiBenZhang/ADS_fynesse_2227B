@@ -23,11 +23,10 @@ def plot_date():
     assess.plot_date_view(data)
 
 
-def plot_ans_graph(latitude, longitude, bounding_box, property_type):
+def plot_ans_graph(data, latitude, longitude, bounding_box, property_type):
     """Provide reference data and their summary near the predicting x.
     Provide a summary of data used in training and validation.
     Plot the map of London house prices"""
-    data = pd.read_csv("./local_data/prices_coordinates_data.csv")
     ref = data.loc[
         (data.latitude > latitude - 0.005)
         & (data.latitude < latitude + 0.005)
@@ -67,12 +66,13 @@ def predict():
     longitude = -0.3
     new_date = datetime.date(2024, 1, 1)
     property_type = "T"
+    dataset = pd.read_csv("./local_data/prices_coordinates_data.csv")
     r2, y, bounding_box = address.predict_price(
-        latitude, longitude, new_date, property_type
+        dataset, latitude, longitude, new_date, property_type
     )
     print(f"R2: {r2}")
     print(f"Prediction: {y}")
-    plot_ans_graph(latitude, longitude, bounding_box, property_type)
+    plot_ans_graph(dataset, latitude, longitude, bounding_box, property_type)
 
 
 if __name__ == "__main__":
