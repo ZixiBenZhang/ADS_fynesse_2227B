@@ -227,7 +227,7 @@ def create_connection(user, password, host, database, port=3306) -> Connection:
     return conn
 
 
-def create_database_property_prices(conn: Connection) -> None:
+def create_database_property_prices(conn: Connection) -> tuple:
     cur = conn.cursor()
     cur.execute(
         """
@@ -240,8 +240,11 @@ def create_database_property_prices(conn: Connection) -> None:
     """
     )
 
+    rows = cur.fetchall()
+    return rows
 
-def setup_pp_data(conn: Connection) -> None:
+
+def setup_pp_data(conn: Connection) -> tuple:
     cur = conn.cursor()
     cur.execute(
         """
@@ -281,10 +284,12 @@ def setup_pp_data(conn: Connection) -> None:
         MODIFY db_id bigint(20) unsigned NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
     """
     )
-    return
+
+    rows = cur.fetchall()
+    return rows
 
 
-def setup_postcode_data(conn: Connection) -> None:
+def setup_postcode_data(conn: Connection) -> tuple:
     cur = conn.cursor()
     cur.execute(
         """
@@ -325,10 +330,12 @@ def setup_postcode_data(conn: Connection) -> None:
         MODIFY `db_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
     """
     )
-    return
+
+    rows = cur.fetchall()
+    return rows
 
 
-def setup_prices_coordinates_data(conn: Connection) -> None:
+def setup_prices_coordinates_data(conn: Connection) -> tuple:
     cur = conn.cursor()
     cur.execute(
         """
@@ -364,7 +371,9 @@ def setup_prices_coordinates_data(conn: Connection) -> None:
         MODIFY `db_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
     """
     )
-    return
+
+    rows = cur.fetchall()
+    return rows
 
 
 def get_tables(conn: Connection) -> tuple:
@@ -400,7 +409,7 @@ def select_top(conn: Connection, table: str, n: int) -> tuple:
 
 def upload_csv_to_table(
     conn: Connection, filename: str, table_name: str = "pp_data"
-) -> None:
+) -> tuple:
     """
     Upload csv file in Google Colab to table_name in database
     :param conn: the Connection object
@@ -416,6 +425,9 @@ def upload_csv_to_table(
     cur = conn.cursor()
     cur.execute(sql_command)
 
+    rows = cur.fetchall()
+    return rows
+
 
 def count_number_of_rows(conn: Connection, table: str) -> tuple:
     """
@@ -427,7 +439,7 @@ def count_number_of_rows(conn: Connection, table: str) -> tuple:
     cur.execute(
         f"""
         USE `property_prices`;
-        SELECT COUNT(db_id) as rows_num FROM {table};
+        SELECT COUNT(db_id) AS rows_num FROM {table};
         """
     )
 
@@ -435,7 +447,7 @@ def count_number_of_rows(conn: Connection, table: str) -> tuple:
     return rows
 
 
-def index_postcode_data(conn: Connection) -> None:
+def index_postcode_data(conn: Connection) -> tuple:
     cur = conn.cursor()
     cur.execute(
         """
@@ -443,7 +455,9 @@ def index_postcode_data(conn: Connection) -> None:
         CREATE INDEX PCIndex ON postcode_data (postcode);
         """
     )
-    return
+
+    rows = cur.fetchall()
+    return rows
 
 
 def join_pp_pc(conn: Connection) -> tuple:
