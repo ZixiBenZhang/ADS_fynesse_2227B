@@ -3,6 +3,7 @@ import pandas
 from .config import *
 import pymysql
 from pymysql import Connection
+from pymysql.constants import CLIENT
 import yaml
 import pandas as pd
 
@@ -218,7 +219,8 @@ def create_connection(user, password, host, database, port=3306) -> Connection:
             host=host,
             port=port,
             local_infile=1,
-            # db=database,
+            db=database,
+            client_flag=CLIENT.MULTI_STATEMENTS,
         )
     except Exception as e:
         print(f"Error connecting to the MariaDB Server: {e}")
