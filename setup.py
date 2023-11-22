@@ -34,7 +34,7 @@ REQUIRED = [
     "jupyter",
     "matplotlib",
     "pymysql",
-    "sklearn",
+    "scikit-learn",
     "osmnx",
     "mlai",
 ]
