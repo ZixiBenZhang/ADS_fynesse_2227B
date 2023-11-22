@@ -33,6 +33,10 @@ REQUIRED = [
     "numpy",
     "jupyter",
     "matplotlib",
+    "pymysql",
+    "sklearn",
+    "osmnx",
+    "mlai",
 ]
 
 # What packages are optional?

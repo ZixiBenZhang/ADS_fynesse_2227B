@@ -7,6 +7,5 @@ osmnx~=1.7.1
 mlai~=0.1.2
 numpy~=1.26.2
 scikit-learn~=1.3.2
-torch~=2.1.1
 fynesse~=0.1.0
 nose~=1.3.7
