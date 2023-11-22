@@ -373,7 +373,7 @@ def get_tables(conn: Connection) -> tuple:
         """
         USE property_prices;
         SHOW TABLES;
-    """
+        """
     )
     rows = cur.fetchall()
     return rows
@@ -387,7 +387,12 @@ def select_top(conn: Connection, table: str, n: int) -> tuple:
     :param n: Number of rows to query
     """
     cur = conn.cursor()
-    cur.execute(f"SELECT * FROM {table} LIMIT {n} ;")
+    cur.execute(
+        f"""
+        USE `property_prices`;
+        SELECT * FROM {table} LIMIT {n} ;
+        """
+    )
 
     rows = cur.fetchall()
     return rows
@@ -403,6 +408,7 @@ def upload_csv_to_table(
     :param table_name: The table to load to
     """
     sql_command = f"""
+        USE `property_prices`;
         LOAD DATA LOCAL INFILE '{filename}' INTO TABLE `{table_name}`
         FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED by '"'
         LINES STARTING BY '' TERMINATED BY '\n';
@@ -418,7 +424,12 @@ def count_number_of_rows(conn: Connection, table: str) -> tuple:
     :param table: The table to query
     """
     cur = conn.cursor()
-    cur.execute(f"SELECT COUNT(db_id) as rows_num FROM {table};")
+    cur.execute(
+        f"""
+        USE `property_prices`;
+        SELECT COUNT(db_id) as rows_num FROM {table};
+        """
+    )
 
     rows = cur.fetchall()
     return rows
@@ -426,7 +437,12 @@ def count_number_of_rows(conn: Connection, table: str) -> tuple:
 
 def index_postcode_data(conn: Connection) -> None:
     cur = conn.cursor()
-    cur.execute("""CREATE INDEX PCIndex ON postcode_data (postcode);""")
+    cur.execute(
+        """
+        USE `property_prices`;
+        CREATE INDEX PCIndex ON postcode_data (postcode);
+        """
+    )
     return
 
 
@@ -434,13 +450,15 @@ def join_pp_pc(conn: Connection) -> tuple:
     cur = conn.cursor()
     cur.execute(
         """
+        USE `property_prices`;
+        
         SELECT pp.price, pp.date_of_transfer, pp.postcode, pp.property_type, 
         pp.new_build_flag, pp.tenure_type, pp.locality, pp.town_city, pp.district, 
         pp.county, pc.country, pc.latitude, pc.longitude
         FROM pp_data AS pp
         LEFT JOIN postcode_data AS pc
         ON pc.postcode=pp.postcode ;
-    """
+        """
     )
     rows = cur.fetchall()
     return rows
