@@ -98,6 +98,8 @@ def plot_date_view(dataset: pd.DataFrame):
     )
     axes[4].set_title("Other")
 
+    for ax in axes:
+        ax.tick_params(labelrotation=45)
     plt.tight_layout()
     plt.show()
 
