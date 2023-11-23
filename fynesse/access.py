@@ -221,6 +221,7 @@ def create_connection(user, password, host, database, port=3306) -> Connection:
             local_infile=1,
             db=database,
             client_flag=CLIENT.MULTI_STATEMENTS,
+            autocommit=True,
         )
     except Exception as e:
         print(f"Error connecting to the MariaDB Server: {e}")
