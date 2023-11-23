@@ -220,7 +220,7 @@ def create_connection(user, password, host, database, port=3306) -> Connection:
             port=port,
             local_infile=1,
             db=database,
-            client_flag=CLIENT.MULTI_STATEMENTS,
+            # client_flag=CLIENT.MULTI_STATEMENTS,
             autocommit=True,
         )
     except Exception as e:
@@ -230,16 +230,10 @@ def create_connection(user, password, host, database, port=3306) -> Connection:
 
 def create_database_property_prices(conn: Connection) -> tuple:
     cur = conn.cursor()
-    cur.execute(
-        """
-        SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-        SET time_zone = "+00:00";
-        
-        CREATE DATABASE IF NOT EXISTS `property_prices` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
-        
-        USE `property_prices`;
-    """
-    )
+    cur.execute('SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";')
+    cur.execute('SET time_zone = "+00:00";')
+    cur.execute('CREATE DATABASE IF NOT EXISTS `property_prices` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;')
+    cur.execute('USE `property_prices`;')
 
     rows = cur.fetchall()
     return rows
@@ -249,12 +243,14 @@ def setup_pp_data(conn: Connection) -> tuple:
     cur = conn.cursor()
     cur.execute(
         """
-        USE `property_prices`;
-    
         --
         -- Table structure for table `pp_data`
         --
         DROP TABLE IF EXISTS `pp_data`;
+    """
+    )
+    cur.execute(
+        """
         CREATE TABLE IF NOT EXISTS `pp_data` (
           `transaction_unique_identifier` tinytext COLLATE utf8_bin NOT NULL,
           `price` int(10) unsigned NOT NULL,
@@ -274,13 +270,19 @@ def setup_pp_data(conn: Connection) -> tuple:
           `record_status` varchar(2) COLLATE utf8_bin NOT NULL,
           `db_id` bigint(20) unsigned NOT NULL
         ) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-
+    """
+    )
+    cur.execute(
+        """
         --
         -- Primary key for table `pp_data`
         --
         ALTER TABLE `pp_data`
         ADD PRIMARY KEY (`db_id`);
-        
+    """
+    )
+    cur.execute(
+        """
         ALTER TABLE `pp_data`
         MODIFY db_id bigint(20) unsigned NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
     """
@@ -294,12 +296,14 @@ def setup_postcode_data(conn: Connection) -> tuple:
     cur = conn.cursor()
     cur.execute(
         """
-        USE `property_prices`;
-
         --
         -- Table structure for table `postcode_data`
         --
         DROP TABLE IF EXISTS `postcode_data`;
+        """
+    )
+    cur.execute(
+        """
         CREATE TABLE IF NOT EXISTS `postcode_data` (
           `postcode` varchar(8) COLLATE utf8_bin NOT NULL,
           `status` enum('live','terminated') NOT NULL,
@@ -320,13 +324,19 @@ def setup_postcode_data(conn: Connection) -> tuple:
           `incode` varchar(3)  COLLATE utf8_bin NOT NULL,
           `db_id` bigint(20) unsigned NOT NULL
         ) DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-        
+    """
+    )
+    cur.execute(
+        """
         --
         -- Primary key for table `postcode_data`
         --
         ALTER TABLE `postcode_data`
         ADD PRIMARY KEY (`db_id`);
-        
+    """
+    )
+    cur.execute(
+        """        
         ALTER TABLE `postcode_data`
         MODIFY `db_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
     """
@@ -340,11 +350,14 @@ def setup_prices_coordinates_data(conn: Connection) -> tuple:
     cur = conn.cursor()
     cur.execute(
         """
-        USE `property_prices`;
         --
         -- Table structure for table `prices_coordinates_data`
         --
         DROP TABLE IF EXISTS `prices_coordinates_data`;
+        """
+    )
+    cur.execute(
+        """
         CREATE TABLE IF NOT EXISTS `prices_coordinates_data` (
           `price` int(10) unsigned NOT NULL,
           `date_of_transfer` date NOT NULL,
@@ -361,13 +374,19 @@ def setup_prices_coordinates_data(conn: Connection) -> tuple:
           `longitude` decimal(10,8) NOT NULL,
           `db_id` bigint(20) unsigned NOT NULL
         ) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-
+    """
+    )
+    cur.execute(
+        """
         --
         -- Primary key for table `prices_coordinates_data`
         --
         ALTER TABLE `prices_coordinates_data`
         ADD PRIMARY KEY (`db_id`);
-        
+    """
+    )
+    cur.execute(
+        """
         ALTER TABLE `prices_coordinates_data`
         MODIFY `db_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
     """
@@ -379,12 +398,7 @@ def setup_prices_coordinates_data(conn: Connection) -> tuple:
 
 def get_tables(conn: Connection) -> tuple:
     cur = conn.cursor()
-    cur.execute(
-        """
-        USE property_prices;
-        SHOW TABLES;
-        """
-    )
+    cur.execute("SHOW TABLES;")
     rows = cur.fetchall()
     return rows
 
@@ -397,12 +411,7 @@ def select_top(conn: Connection, table: str, n: int) -> tuple:
     :param n: Number of rows to query
     """
     cur = conn.cursor()
-    cur.execute(
-        f"""
-        USE `property_prices`;
-        SELECT * FROM {table} LIMIT {n} ;
-        """
-    )
+    cur.execute(f"SELECT * FROM {table} LIMIT {n} ;")
 
     rows = cur.fetchall()
     return rows
@@ -418,7 +427,6 @@ def upload_csv_to_table(
     :param table_name: The table to load to
     """
     sql_command = f"""
-        USE `property_prices`;
         LOAD DATA LOCAL INFILE '{filename}' INTO TABLE `{table_name}`
         FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED by '"'
         LINES STARTING BY '' TERMINATED BY '\n';
@@ -437,12 +445,7 @@ def count_number_of_rows(conn: Connection, table: str) -> tuple:
     :param table: The table to query
     """
     cur = conn.cursor()
-    cur.execute(
-        f"""
-        USE `property_prices`;
-        SELECT COUNT(db_id) AS rows_num FROM {table};
-        """
-    )
+    cur.execute(f"SELECT COUNT(db_id) AS rows_num FROM {table};")
 
     rows = cur.fetchall()
     return rows
@@ -450,12 +453,7 @@ def count_number_of_rows(conn: Connection, table: str) -> tuple:
 
 def index_postcode_data(conn: Connection) -> tuple:
     cur = conn.cursor()
-    cur.execute(
-        """
-        USE `property_prices`;
-        CREATE INDEX PCIndex ON postcode_data (postcode);
-        """
-    )
+    cur.execute("CREATE INDEX PCIndex ON postcode_data (postcode);")
 
     rows = cur.fetchall()
     return rows
@@ -464,9 +462,7 @@ def index_postcode_data(conn: Connection) -> tuple:
 def join_pp_pc(conn: Connection) -> tuple:
     cur = conn.cursor()
     cur.execute(
-        """
-        USE `property_prices`;
-        
+        """        
         SELECT pp.price, pp.date_of_transfer, pp.postcode, pp.property_type, 
         pp.new_build_flag, pp.tenure_type, pp.locality, pp.town_city, pp.district, 
         pp.county, pc.country, pc.latitude, pc.longitude
