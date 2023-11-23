@@ -234,8 +234,10 @@ def create_database_property_prices(conn: Connection) -> tuple:
     cur = conn.cursor()
     cur.execute('SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";')
     cur.execute('SET time_zone = "+00:00";')
-    cur.execute('CREATE DATABASE IF NOT EXISTS `property_prices` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;')
-    cur.execute('USE `property_prices`;')
+    cur.execute(
+        "CREATE DATABASE IF NOT EXISTS `property_prices` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;"
+    )
+    cur.execute("USE `property_prices`;")
 
     rows = cur.fetchall()
     return rows
