@@ -197,6 +197,7 @@ def pandas_join_pp_pc() -> None:
 
 
 def print_res(rows: tuple) -> None:
+    """Print result rows from cursor.fetchall()"""
     for r in rows:
         print(r)
 
@@ -229,6 +230,7 @@ def create_connection(user, password, host, database, port=3306) -> Connection:
 
 
 def create_database_property_prices(conn: Connection) -> tuple:
+    """Create and setup `property_prices` database"""
     cur = conn.cursor()
     cur.execute('SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";')
     cur.execute('SET time_zone = "+00:00";')
@@ -240,6 +242,7 @@ def create_database_property_prices(conn: Connection) -> tuple:
 
 
 def setup_pp_data(conn: Connection) -> tuple:
+    """Create `pp_data` table, specify schema and primary key"""
     cur = conn.cursor()
     cur.execute(
         """
@@ -293,6 +296,7 @@ def setup_pp_data(conn: Connection) -> tuple:
 
 
 def setup_postcode_data(conn: Connection) -> tuple:
+    """Create `postcode_data` table, specify schema and primary key"""
     cur = conn.cursor()
     cur.execute(
         """
@@ -347,6 +351,7 @@ def setup_postcode_data(conn: Connection) -> tuple:
 
 
 def setup_prices_coordinates_data(conn: Connection) -> tuple:
+    """Create `prices_coordinates_data` table, specify schema and primary key"""
     cur = conn.cursor()
     cur.execute(
         """
@@ -397,6 +402,7 @@ def setup_prices_coordinates_data(conn: Connection) -> tuple:
 
 
 def get_tables(conn: Connection) -> tuple:
+    """Get table names in the database"""
     cur = conn.cursor()
     cur.execute("SHOW TABLES;")
     rows = cur.fetchall()
@@ -452,6 +458,7 @@ def count_number_of_rows(conn: Connection, table: str) -> tuple:
 
 
 def index_postcode_data(conn: Connection) -> tuple:
+    """Create index for `postcode_data` table on "postcode" column"""
     cur = conn.cursor()
     cur.execute("CREATE INDEX PCIndex ON postcode_data (postcode);")
 
@@ -460,6 +467,7 @@ def index_postcode_data(conn: Connection) -> tuple:
 
 
 def join_pp_pc(conn: Connection) -> tuple:
+    """Join `pp_data` and `postcode_data` on "postcode" column"""
     cur = conn.cursor()
     cur.execute(
         """        

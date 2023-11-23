@@ -28,7 +28,9 @@ from . import assess
 def predict_price(
     dataset, latitude, longitude, date, property_type
 ) -> tuple[float, list, tuple]:
-    """Price prediction for UK housing."""
+    """Price prediction for UK housing.
+    Returns R2 score on validation dataset, prediction result,
+    and the bounding box where the learning dataset was selected"""
 
     # Construct learning set: near (latitude, longitude), all dates, of same property_type
     dataset, bounding_box = get_learning_dataset(
@@ -87,7 +89,9 @@ def predict_price(
 def get_learning_dataset(
     dataset, latitude, longitude, date, property_type
 ) -> tuple[pd.DataFrame, tuple]:
-    # Todo: load data from assess.data(). Load data using SQL within a large box??
+    """Load and merge data for model learning.
+    Returns a dataset and the bounding box from which the data were selected."""
+
     # data = pd.read_csv("./local_data/prices_coordinates_data.csv")
     # data.loc[:, "date_of_transfer"] = pd.to_datetime(data["date_of_transfer"])
     data = assess.labelled(assess.data(dataset))
