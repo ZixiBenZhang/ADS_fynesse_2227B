@@ -27,7 +27,7 @@ def data(df: pd.DataFrame) -> pd.DataFrame:
     """Load the data from access and ensure missing values are correctly encoded as well as indices correct,
     column names informative, date and times correctly formatted. Return a structured data structure such as a data
     frame."""
-    df.loc[:, "date_of_transfer"] = pd.to_datetime(df.loc[:, "date_of_transfer"])
+    df.loc[:, "date_of_transfer"] = pd.to_datetime(df["date_of_transfer"])
     return df
 
 
@@ -48,7 +48,7 @@ def plot_date_view(dataset: pd.DataFrame):
         & (0.5 > dataset.longitude)
         & (dataset.longitude > -0.5)
     ]
-    data_.loc[:, "date_of_transfer"] = pd.to_datetime(data_.loc[:, "date_of_transfer"])
+    data_.loc[:, "date_of_transfer"] = pd.to_datetime(data_["date_of_transfer"])
 
     flat = data_[data_.property_type == "F"]
     semidetached = data_[data_.property_type == "S"]
@@ -117,7 +117,7 @@ def plot_loc_view(dataset: pd.DataFrame):
         & (east > dataset.longitude)
         & (dataset.longitude > west)
     ]
-    data_.loc[:, "date_of_transfer"] = pd.to_datetime(data_.loc[:, "date_of_transfer"])
+    data_.loc[:, "date_of_transfer"] = pd.to_datetime(data_["date_of_transfer"])
     data_ = data_.loc[
         (pd.Timestamp(date(2022, 12, 31)) > data_.date_of_transfer)
         & (data_.date_of_transfer > pd.Timestamp(date(2022, 1, 1)))

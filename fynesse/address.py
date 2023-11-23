@@ -34,7 +34,7 @@ def predict_price(
     dataset, bounding_box = get_learning_dataset(
         dataset, latitude, longitude, date, property_type
     )
-    dataset.loc[:, "date_of_transfer"] = dataset.loc[:, "date_of_transfer"].apply(
+    dataset.loc[:, "date_of_transfer"] = dataset["date_of_transfer"].apply(
         lambda x: round(x.value / (24 * 60 * 60 * 1e9))
     )
 
@@ -89,7 +89,7 @@ def get_learning_dataset(
 ) -> tuple[pd.DataFrame, tuple]:
     # Todo: load data from assess.data(). Load data using SQL within a large box??
     # data = pd.read_csv("./local_data/prices_coordinates_data.csv")
-    # data.loc[:, "date_of_transfer"] = pd.to_datetime(data.loc[:, "date_of_transfer"])
+    # data.loc[:, "date_of_transfer"] = pd.to_datetime(data["date_of_transfer"])
     data = assess.labelled(assess.data(dataset))
 
     date_range = _get_date_range(date)
