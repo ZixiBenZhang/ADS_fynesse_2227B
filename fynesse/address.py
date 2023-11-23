@@ -166,4 +166,4 @@ def _get_bounding_box(
 
 
 def _get_date_range(date: datetime.date) -> tuple[datetime.date, datetime.date]:
-    return datetime.date(date.year - 5, 1, 1), datetime.date(date.year + 5, 12, 31)
+    return datetime.date(1995, 1, 1), datetime.date(2023, 12, 31)
